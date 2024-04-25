@@ -1,0 +1,42 @@
+{
+  "profiles": {
+    "Notidar.MongoDB.Lock.Sample": {
+      "commandName": "Project"
+    },
+    "exclusive-locks": {
+      "commandName": "Project",
+      "commandLineArgs": "exclusive-locks -o 10 -d 5 -t 3",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "shared-locks": {
+      "commandName": "Project",
+      "commandLineArgs": "shared-locks -o 10 -d 1 -t 3",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "semaphore-locks": {
+      "commandName": "Project",
+      "commandLineArgs": "semaphore-locks -o 10 -d 3 -t 10 -s 2",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "combined-locks": {
+      "commandName": "Project",
+      "commandLineArgs": "combined-locks -w 1 -r 1000 -d 10 -t 100 -s 100",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "long-locks": {
+      "commandName": "Project",
+      "commandLineArgs": "long-locks -w 30",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
