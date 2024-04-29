@@ -5,6 +5,7 @@ namespace Notidar.MongoDB.Lock.Tests
     public class SharedLockTests : BaseProviderTests
     {
         [Fact]
+        [Trait("Category", "Manual")]
         public async Task LockProvider_NormalizeResource_NotFound()
         {
             var resource = await LockProvider.GetResourceAsync("resource1");

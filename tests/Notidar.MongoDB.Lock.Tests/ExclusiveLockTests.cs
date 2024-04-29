@@ -5,6 +5,7 @@ namespace Notidar.MongoDB.Lock.Tests
     public class ExclusiveLockTests : BaseProviderTests
     {
         [Fact]
+        [Trait("Category", "Manual")]
         public async Task ExclusiveUnlockAsync_WhenResourceMissing_ReturnsNull()
         {
             var resource = await LockProvider.ExclusiveUnlockAsync("1", "1");
@@ -39,6 +40,7 @@ namespace Notidar.MongoDB.Lock.Tests
         //}
 
         [Fact]
+        [Trait("Category", "Manual")]
         public async Task ExclusiveLockAsync_WithExpirationAndBlock_WhenResourceMissing_ReturnsLockedResource()
         {
             var expiration = TimeSpan.FromSeconds(30);
