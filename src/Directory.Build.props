@@ -5,7 +5,7 @@
     <LangVersion>latest</LangVersion>
     <Authors>Ihnat Klimchuk</Authors>
     <Company>Notidar</Company>
-    <PackageIcon>./logo.png</PackageIcon>
+    <PackageIcon>logo.png</PackageIcon>
     <PackageTags>lock,mongodb,mongo,distributed,distributedlock,mutex</PackageTags>
     <PackageProjectUrl>https://github.com/notidar/mongo-lock</PackageProjectUrl>
     <RepositoryUrl>https://github.com/notidar/mongo-lock</RepositoryUrl>
