@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.Bcl.TimeProvider" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\logo.png" Pack="true" PackagePath="'\" />
+  </ItemGroup>
+
 </Project>
