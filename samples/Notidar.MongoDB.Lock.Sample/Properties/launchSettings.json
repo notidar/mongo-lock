@@ -26,7 +26,7 @@
     },
     "combined-locks": {
       "commandName": "Project",
-      "commandLineArgs": "combined-locks -w 1 -r 1000 -d 10 -t 100 -s 100",
+      "commandLineArgs": "combined-locks -w 3 -r 10 -d 1 -t 20 -s 20",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }

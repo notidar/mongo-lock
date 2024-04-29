@@ -1,0 +1,36 @@
+name: Publish
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish Notidar.MongoDB.Lock
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+          PROJECT_FILE_PATH: src/Notidar.MongoDB.Lock/Notidar.MongoDB.Lock.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+
+    - name: Publish Notidar.MongoDB.Lock.Extensions
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+          PROJECT_FILE_PATH: src/Notidar.MongoDB.Lock.Extensions/Notidar.MongoDB.Lock.Extensions.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true

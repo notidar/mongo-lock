@@ -1,4 +1,6 @@
-﻿namespace Notidar.MongoDB.Lock.Managers
+﻿using System;
+
+namespace Notidar.MongoDB.Lock.Managers
 {
     public sealed class LockOptions
     {

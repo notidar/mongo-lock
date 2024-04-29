@@ -1,4 +1,7 @@
-﻿namespace Notidar.MongoDB.Lock.Managers
+﻿using System;
+using System.Threading;
+
+namespace Notidar.MongoDB.Lock.Managers
 {
     public interface ILock : IAsyncDisposable
     {

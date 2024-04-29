@@ -1,4 +1,8 @@
-﻿namespace Notidar.MongoDB.Lock.Stores
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Notidar.MongoDB.Lock.Stores
 {
     public interface ILockStore
     {

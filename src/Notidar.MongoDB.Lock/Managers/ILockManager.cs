@@ -1,4 +1,7 @@
-﻿namespace Notidar.MongoDB.Lock.Managers
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Notidar.MongoDB.Lock.Managers
 {
     public interface ILockManager
     {

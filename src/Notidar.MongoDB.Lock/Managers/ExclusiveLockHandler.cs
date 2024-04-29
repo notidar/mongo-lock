@@ -1,4 +1,7 @@
 ﻿using Notidar.MongoDB.Lock.Stores;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Notidar.MongoDB.Lock.Managers
 {
@@ -43,7 +46,7 @@ namespace Notidar.MongoDB.Lock.Managers
                         var resource = await (_lockStore?.ExclusiveRenewAsync(_resourceId, _lockId, _lockManagerOptions.LockExpiration) ?? Task.FromResult<Resource?>(null));
                         if (resource?.ExclusiveLock?.Expiration is null)
                         {
-                            await (_cancellationTokenSource?.CancelAsync() ?? Task.CompletedTask);
+                            _cancellationTokenSource?.Cancel();
                             break;
                         }
                         else
@@ -62,7 +65,7 @@ namespace Notidar.MongoDB.Lock.Managers
                         }
                         else
                         {
-                            await (_cancellationTokenSource?.CancelAsync() ?? Task.CompletedTask);
+                            _cancellationTokenSource?.Cancel();
                             break;
                         }
                     }

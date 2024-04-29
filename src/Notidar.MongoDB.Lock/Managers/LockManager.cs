@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using Notidar.MongoDB.Lock.Stores;
+﻿using Notidar.MongoDB.Lock.Stores;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Notidar.MongoDB.Lock.Managers
 {
@@ -7,10 +10,10 @@ namespace Notidar.MongoDB.Lock.Managers
     {
         private ILockStore _lockStore;
         private LockOptions _options;
-        public LockManager(ILockStore lockStore, IOptions<LockOptions> options)
+        public LockManager(ILockStore lockStore, LockOptions options)
         {
             _lockStore = lockStore ?? throw new ArgumentNullException(nameof(lockStore));
-            _options = options.Value ?? throw new ArgumentNullException(nameof(options));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public async Task<ILock> ExclusiveLockAsync(string resourceId, string lockId, CancellationToken cancellationToken = default)

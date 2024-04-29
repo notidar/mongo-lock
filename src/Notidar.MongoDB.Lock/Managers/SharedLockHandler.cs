@@ -1,4 +1,8 @@
 ﻿using Notidar.MongoDB.Lock.Stores;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Notidar.MongoDB.Lock.Managers
 {
@@ -47,7 +51,7 @@ namespace Notidar.MongoDB.Lock.Managers
                         
                         if (sharedLock?.Expiration is null)
                         {
-                            await (_cancellationTokenSource?.CancelAsync() ?? Task.CompletedTask);
+                            _cancellationTokenSource?.Cancel();
                             break;
                         }
                         else
@@ -66,7 +70,7 @@ namespace Notidar.MongoDB.Lock.Managers
                         }
                         else
                         {
-                            await (_cancellationTokenSource?.CancelAsync() ?? Task.CompletedTask);
+                            _cancellationTokenSource?.Cancel();
                             break;
                         }
                     }

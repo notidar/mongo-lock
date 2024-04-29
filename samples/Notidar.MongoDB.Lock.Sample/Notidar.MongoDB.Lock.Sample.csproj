@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Notidar.MongoDB.Lock\Notidar.MongoDB.Lock.csproj" />
+    <ProjectReference Include="..\..\src\Notidar.MongoDB.Lock.Extensions\Notidar.MongoDB.Lock.Extensions.csproj" />
   </ItemGroup>
 
 </Project>
