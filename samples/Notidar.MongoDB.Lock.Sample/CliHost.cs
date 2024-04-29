@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Notidar.MongoDB.Lock.Extensions;
+using Notidar.MongoDB.Lock.Managers;
 using Notidar.MongoDB.Lock.Sample.Commands;
 using Notidar.MongoDB.Lock.Sample.Commands.CombinedLocks;
 using Notidar.MongoDB.Lock.Sample.Commands.ExclusiveLocks;
 using Notidar.MongoDB.Lock.Sample.Commands.LongLocks;
 using Notidar.MongoDB.Lock.Sample.Commands.SemaphoreLocks;
 using Notidar.MongoDB.Lock.Sample.Commands.SharedLocks;
-using Notidar.MongoDB.Lock.Sample.Database;
 
 namespace Notidar.MongoDB.Lock.Sample
 {
@@ -27,7 +28,7 @@ namespace Notidar.MongoDB.Lock.Sample
         {
             services
                 .AddMongoDb(configuration.GetSection(nameof(DatabaseOptions)))
-                .AddMongoLocks();
+                .AddMongoLocks(configuration.GetSection(nameof(LockSettings)));
 
             services
                 .AddExclusiveLocksCommand()

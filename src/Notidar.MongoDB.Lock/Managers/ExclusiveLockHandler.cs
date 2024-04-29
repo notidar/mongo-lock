@@ -8,7 +8,7 @@ namespace Notidar.MongoDB.Lock.Managers
     public sealed class ExclusiveLockHandler : ILock
     {
         private ILockStore? _lockStore;
-        private LockOptions _lockManagerOptions;
+        private LockSettings _lockManagerOptions;
         private string _resourceId;
         private string _lockId;
         private DateTimeOffset _lockExpiration;
@@ -18,7 +18,7 @@ namespace Notidar.MongoDB.Lock.Managers
 
         public ExclusiveLockHandler(
             ILockStore lockStore,
-            LockOptions lockManagerOptions,
+            LockSettings lockManagerOptions,
             string resourceId, 
             string lockId, 
             DateTimeOffset lockExpiration,
@@ -43,7 +43,7 @@ namespace Notidar.MongoDB.Lock.Managers
                     await Task.Delay(delay);
                     try
                     {
-                        var resource = await (_lockStore?.ExclusiveRenewAsync(_resourceId, _lockId, _lockManagerOptions.LockExpiration) ?? Task.FromResult<Resource?>(null));
+                        var resource = await (_lockStore?.ExclusiveRenewAsync(_resourceId, _lockId, _lockManagerOptions.LockExpirationPeriod) ?? Task.FromResult<Resource?>(null));
                         if (resource?.ExclusiveLock?.Expiration is null)
                         {
                             _cancellationTokenSource?.Cancel();

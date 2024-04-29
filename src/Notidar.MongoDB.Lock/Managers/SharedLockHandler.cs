@@ -9,7 +9,7 @@ namespace Notidar.MongoDB.Lock.Managers
     public sealed class SharedLockHandler : ILock
     {
         private ILockStore? _lockStore;
-        private LockOptions _lockManagerOptions;
+        private LockSettings _lockManagerOptions;
         private string _resourceId;
         private string _lockId;
         private DateTimeOffset _lockExpiration;
@@ -19,7 +19,7 @@ namespace Notidar.MongoDB.Lock.Managers
 
         public SharedLockHandler(
             ILockStore? lockStore,
-            LockOptions lockManagerOptions,
+            LockSettings lockManagerOptions,
             string resourceId,
             string lockId,
             DateTimeOffset lockExpiration,
@@ -46,7 +46,7 @@ namespace Notidar.MongoDB.Lock.Managers
                     await Task.Delay(delay, internalCancellationToken);
                     try
                     {
-                        var resource = await (_lockStore?.SharedRenewAsync(_resourceId, _lockId, _lockManagerOptions.LockExpiration, internalCancellationToken) ?? Task.FromResult<Resource?>(null));
+                        var resource = await (_lockStore?.SharedRenewAsync(_resourceId, _lockId, _lockManagerOptions.LockExpirationPeriod, internalCancellationToken) ?? Task.FromResult<Resource?>(null));
                         var sharedLock = resource?.SharedLocks?.SingleOrDefault(x => x.LockId == _lockId);
                         
                         if (sharedLock?.Expiration is null)
