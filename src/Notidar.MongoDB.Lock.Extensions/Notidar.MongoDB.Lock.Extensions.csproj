@@ -3,6 +3,7 @@
   <PropertyGroup>
     <PackageId>Notidar.MongoDB.Lock.Extensions</PackageId>
     <Description>Extensions for distributed lock library for C#/.NET using MongoDB.</Description>
+    <Version>0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

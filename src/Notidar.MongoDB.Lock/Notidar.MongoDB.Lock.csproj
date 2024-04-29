@@ -3,6 +3,7 @@
   <PropertyGroup>
     <PackageId>Notidar.MongoDB.Lock</PackageId>
     <Description>Distributed lock library for C#/.NET using MongoDB.</Description>
+    <Version>0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
