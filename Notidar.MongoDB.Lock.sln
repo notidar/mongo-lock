@@ -11,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A6E7DA1E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notidar.MongoDB.Lock.Tests", "tests\Notidar.MongoDB.Lock.Tests\Notidar.MongoDB.Lock.Tests.csproj", "{1F82505F-325E-4450-871C-E4CDCCEF9752}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notidar.MongoDB.Lock.Sample", "src\Notidar.MongoDB.Lock.Sample\Notidar.MongoDB.Lock.Sample.csproj", "{61CAA32E-B708-4FCB-B561-AAAB2B2CEDEE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{616222B3-6EA4-415C-923E-2B04299E6B77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notidar.MongoDB.Lock.Sample", "samples\Notidar.MongoDB.Lock.Sample\Notidar.MongoDB.Lock.Sample.csproj", "{32230136-CBFE-4410-8899-8CD9ED7BD630}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +29,10 @@ Global
 		{1F82505F-325E-4450-871C-E4CDCCEF9752}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F82505F-325E-4450-871C-E4CDCCEF9752}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F82505F-325E-4450-871C-E4CDCCEF9752}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61CAA32E-B708-4FCB-B561-AAAB2B2CEDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61CAA32E-B708-4FCB-B561-AAAB2B2CEDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61CAA32E-B708-4FCB-B561-AAAB2B2CEDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61CAA32E-B708-4FCB-B561-AAAB2B2CEDEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32230136-CBFE-4410-8899-8CD9ED7BD630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32230136-CBFE-4410-8899-8CD9ED7BD630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32230136-CBFE-4410-8899-8CD9ED7BD630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32230136-CBFE-4410-8899-8CD9ED7BD630}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,7 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{646E6981-B2E4-4854-9B0C-B18F6247EE94} = {4A5B9D35-0998-4ECE-A2A8-91358172A395}
 		{1F82505F-325E-4450-871C-E4CDCCEF9752} = {A6E7DA1E-2BBE-4436-AB41-20C33F28E585}
-		{61CAA32E-B708-4FCB-B561-AAAB2B2CEDEE} = {4A5B9D35-0998-4ECE-A2A8-91358172A395}
+		{32230136-CBFE-4410-8899-8CD9ED7BD630} = {616222B3-6EA4-415C-923E-2B04299E6B77}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B777426D-6265-4A34-B694-C6925E564629}
