@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notidar.MongoDB.Lock", "src\Notidar.MongoDB.Lock\Notidar.MongoDB.Lock.csproj", "{646E6981-B2E4-4854-9B0C-B18F6247EE94}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4A5B9D35-0998-4ECE-A2A8-91358172A395}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A6E7DA1E-2BBE-4436-AB41-20C33F28E585}"
 EndProject

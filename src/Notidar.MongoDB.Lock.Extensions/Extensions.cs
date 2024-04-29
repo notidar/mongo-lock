@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Notidar.MongoDB.Lock.Managers;
 using Notidar.MongoDB.Lock.Stores;
+using System;
 
 namespace Notidar.MongoDB.Lock
 {

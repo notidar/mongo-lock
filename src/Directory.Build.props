@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
+    <Version>0.0.1</Version>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Authors>Ihnat Klimchuk</Authors>
+    <Company>Notidar</Company>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>lock,mongodb,mongo,distributed,distributedlock,mutex</PackageTags>
+    <PackageProjectUrl>https://github.com/notidar/mongo-lock</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/notidar/mongo-lock</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+</Project>
