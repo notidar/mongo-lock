@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using Notidar.MongoDB.Lock.Managers;
+using Notidar.MongoDB.Lock.Services;
 using Notidar.MongoDB.Lock.Stores;
 using System;
 
@@ -35,11 +35,11 @@ namespace Notidar.MongoDB.Lock.Extensions
                 })
                 .AddHostedService<LockCollectionService>()
                 .AddSingleton<ILockStore, LockStore>()
-                .AddSingleton<ILockManager, LockManager>(sp =>
+                .AddSingleton<ILockService, LockService>(sp =>
                 {
                     var options = sp.GetRequiredService<IOptions<LockOptions>>();
                     var lockStore = sp.GetRequiredService<ILockStore>();
-                    return new LockManager(lockStore, options.Value);
+                    return new LockService(lockStore, options.Value);
                 });
         }
 

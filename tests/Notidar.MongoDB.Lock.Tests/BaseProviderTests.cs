@@ -30,6 +30,7 @@ namespace Notidar.MongoDB.Lock.Tests
         {
             await MongoDatabase.DropCollectionAsync(Constants.DefaultCollectionName);
             await MongoDatabase.EnsureLockCollectionExistsAsync();
+            await MongoDatabase.CreateCleanupIndexAsync();
         }
     }
 }

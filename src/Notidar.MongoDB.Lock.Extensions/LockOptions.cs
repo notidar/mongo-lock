@@ -1,4 +1,4 @@
-﻿using Notidar.MongoDB.Lock.Managers;
+﻿using Notidar.MongoDB.Lock.Services;
 
 namespace Notidar.MongoDB.Lock.Extensions
 {
@@ -8,5 +8,6 @@ namespace Notidar.MongoDB.Lock.Extensions
         /// Optional collection name to use. Default is "locks" defined <see cref="Constants.DefaultCollectionName"/>
         /// </summary>
         public string? CollectionName { get; set; } = Constants.DefaultCollectionName;
+        public bool CollectionCleanup { get; set; } = false;
     }
 }

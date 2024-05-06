@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Notidar.MongoDB.Lock.Managers
+namespace Notidar.MongoDB.Lock.Services
 {
     public class LockSettings
     {

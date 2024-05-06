@@ -58,7 +58,8 @@ namespace Notidar.MongoDB.Lock.Stores
                             Builders<Resource>.Filter.Lt(r => r.ExclusiveLock!.Expiration, utcNow))),
                     update: Builders<Resource>.Update
                         .Push(r => r.SharedLocks, @lock)
-                        .Max(r => r.MaxExpiration, @lock.Expiration),
+                        .Max(r => r.MaxExpiration, @lock.Expiration)
+                        .SetOnInsert(r => r.InfiniteLockCount, 0),
                     options: new FindOneAndUpdateOptions<Resource>
                     {
                         IsUpsert = true,
@@ -91,7 +92,8 @@ namespace Notidar.MongoDB.Lock.Stores
                             Builders<Resource>.Filter.Lt(r => r.ExclusiveLock!.Expiration, utcNow))),
                     update: Builders<Resource>.Update
                         .Set(r => r.ExclusiveLock, @lock)
-                        .Max(r => r.MaxExpiration, @lock.Expiration),
+                        .Max(r => r.MaxExpiration, @lock.Expiration)
+                        .SetOnInsert(r => r.InfiniteLockCount, 0),
                     options: new FindOneAndUpdateOptions<Resource>
                     {
                         IsUpsert = true,
@@ -130,6 +132,7 @@ namespace Notidar.MongoDB.Lock.Stores
                 update: Builders<Resource>.Update.PullFilter(r => r.SharedLocks, l => l.LockId == lockId),
                 options: new FindOneAndUpdateOptions<Resource>
                 {
+                    IsUpsert = false,
                     ReturnDocument = ReturnDocument.After
                 },
                 cancellationToken: cancellationToken);

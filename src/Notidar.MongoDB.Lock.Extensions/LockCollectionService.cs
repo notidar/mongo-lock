@@ -21,6 +21,14 @@ namespace Notidar.MongoDB.Lock.Extensions
         {
             var collectionName = _options.CollectionName ?? Constants.DefaultCollectionName;
             await _database.EnsureLockCollectionExistsAsync(collectionName, cancellationToken);
+            if (_options.CollectionCleanup)
+            {
+                await _database.CreateCleanupIndexAsync(collectionName, cancellationToken: cancellationToken);
+            }
+            else
+            {
+                await _database.DropCleanupIndexAsync(collectionName, cancellationToken: cancellationToken);
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

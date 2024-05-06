@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
-using Notidar.MongoDB.Lock.Managers;
+using Notidar.MongoDB.Lock.Services;
 
 namespace Notidar.MongoDB.Lock.Sample.Commands.SharedLocks
 {
     public sealed class SharedLocksCommand : ICommand<SharedLocksOptions>
     {
-        private readonly ILockManager _lockManager;
+        private readonly ILockService _lockService;
         private readonly ILogger<SharedLocksCommand> _logger;
-        public SharedLocksCommand(ILockManager lockManager, ILogger<SharedLocksCommand> logger)
+        public SharedLocksCommand(ILockService lockService, ILogger<SharedLocksCommand> logger)
         {
-            _lockManager = lockManager ?? throw new ArgumentNullException(nameof(lockManager));
+            _lockService = lockService ?? throw new ArgumentNullException(nameof(lockService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -29,7 +29,7 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.SharedLocks
                 {
                     var lockId = index.ToString();
                     _logger.LogInformation("Operation {Index} started", index);
-                    await using (var sharedLock = await _lockManager.SharedLockAsync(resourceId, lockId, operationCancellationToken))
+                    await using (var sharedLock = await _lockService.SharedLockAsync(resourceId, lockId, operationCancellationToken))
                     {
                         _logger.LogInformation("Operation {Index} locked", index);
                         

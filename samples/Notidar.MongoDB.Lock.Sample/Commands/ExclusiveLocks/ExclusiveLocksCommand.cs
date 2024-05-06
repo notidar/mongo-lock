@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
-using Notidar.MongoDB.Lock.Managers;
+using Notidar.MongoDB.Lock.Services;
 
 namespace Notidar.MongoDB.Lock.Sample.Commands.ExclusiveLocks
 {
     public sealed class ExclusiveLocksCommand : ICommand<ExclusiveLocksOptions>
     {
-        private readonly ILockManager _lockManager;
+        private readonly ILockService _lockService;
         private readonly ILogger<ExclusiveLocksCommand> _logger;
-        public ExclusiveLocksCommand(ILockManager lockManager, ILogger<ExclusiveLocksCommand> logger)
+        public ExclusiveLocksCommand(ILockService lockService, ILogger<ExclusiveLocksCommand> logger)
         {
-            _lockManager = lockManager ?? throw new ArgumentNullException(nameof(lockManager));
+            _lockService = lockService ?? throw new ArgumentNullException(nameof(lockService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -29,7 +29,7 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.ExclusiveLocks
                 {
                     var lockId = index.ToString();
                     _logger.LogInformation("Operation {Index} started", index);
-                    await using (var exclusiveLock = await _lockManager.ExclusiveLockAsync(resourceId, lockId, operationCancellationToken))
+                    await using (var exclusiveLock = await _lockService.ExclusiveLockAsync(resourceId, lockId, operationCancellationToken))
                     {
                         _logger.LogInformation("Operation {Index} locked", index);
                         testData = index;

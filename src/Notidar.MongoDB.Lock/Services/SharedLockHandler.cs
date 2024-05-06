@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Notidar.MongoDB.Lock.Managers
+namespace Notidar.MongoDB.Lock.Services
 {
     public sealed class SharedLockHandler : ILock
     {
         private ILockStore? _lockStore;
-        private LockSettings _lockManagerOptions;
+        private LockSettings _lockServiceOptions;
         private string _resourceId;
         private string _lockId;
         private DateTimeOffset _lockExpiration;
@@ -19,14 +19,14 @@ namespace Notidar.MongoDB.Lock.Managers
 
         public SharedLockHandler(
             ILockStore? lockStore,
-            LockSettings lockManagerOptions,
+            LockSettings lockServiceOptions,
             string resourceId,
             string lockId,
             DateTimeOffset lockExpiration,
             CancellationToken cancellationToken = default)
         {
             _lockStore = lockStore;
-            _lockManagerOptions = lockManagerOptions;
+            _lockServiceOptions = lockServiceOptions;
             _resourceId = resourceId;
             _lockId = lockId;
             _lockExpiration = lockExpiration;
@@ -40,13 +40,13 @@ namespace Notidar.MongoDB.Lock.Managers
 
             _task = Task.Run(async () =>
             {
-                var delay = lockManagerOptions.LockRenewalPeriod;
+                var delay = lockServiceOptions.LockRenewalPeriod;
                 while (_lockStore is not null)
                 {
                     await Task.Delay(delay, internalCancellationToken);
                     try
                     {
-                        var resource = await (_lockStore?.SharedRenewAsync(_resourceId, _lockId, _lockManagerOptions.LockExpirationPeriod, internalCancellationToken) ?? Task.FromResult<Resource?>(null));
+                        var resource = await (_lockStore?.SharedRenewAsync(_resourceId, _lockId, _lockServiceOptions.LockExpirationPeriod, internalCancellationToken) ?? Task.FromResult<Resource?>(null));
                         var sharedLock = resource?.SharedLocks?.SingleOrDefault(x => x.LockId == _lockId);
                         
                         if (sharedLock?.Expiration is null)
@@ -57,15 +57,15 @@ namespace Notidar.MongoDB.Lock.Managers
                         else
                         {
                             _lockExpiration = sharedLock.Expiration.Value;
-                            delay = lockManagerOptions.LockRenewalPeriod;
+                            delay = lockServiceOptions.LockRenewalPeriod;
                         }
                     }
                     catch (Exception)
                     {
-                        var approxOperationResult = DateTimeOffset.UtcNow + _lockManagerOptions.ClockSafePeriod + _lockManagerOptions.LockRetryDelay + _lockManagerOptions.OperationTimeout;
+                        var approxOperationResult = DateTimeOffset.UtcNow + _lockServiceOptions.ClockSafePeriod + _lockServiceOptions.LockRetryDelay + _lockServiceOptions.OperationTimeout;
                         if (approxOperationResult < _lockExpiration)
                         {
-                            delay = _lockManagerOptions.LockRetryDelay;
+                            delay = _lockServiceOptions.LockRetryDelay;
                             continue;
                         }
                         else

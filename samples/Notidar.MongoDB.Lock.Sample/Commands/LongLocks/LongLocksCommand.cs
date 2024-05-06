@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.Logging;
-using Notidar.MongoDB.Lock.Managers;
+using Notidar.MongoDB.Lock.Services;
 using Notidar.MongoDB.Lock.Stores;
 
 namespace Notidar.MongoDB.Lock.Sample.Commands.LongLocks
 {
     public sealed class LongLocksCommand : ICommand<LongLocksOptions>
     {
-        private readonly ILockManager _lockManager;
+        private readonly ILockService _lockService;
         private readonly ILockStore _lockStore;
         private readonly ILogger<LongLocksCommand> _logger;
-        public LongLocksCommand(ILockManager lockManager, ILockStore lockStore, ILogger<LongLocksCommand> logger)
+        public LongLocksCommand(ILockService lockService, ILockStore lockStore, ILogger<LongLocksCommand> logger)
         {
-            _lockManager = lockManager ?? throw new ArgumentNullException(nameof(lockManager));
+            _lockService = lockService ?? throw new ArgumentNullException(nameof(lockService));
             _lockStore = lockStore ?? throw new ArgumentNullException(nameof(lockStore));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -24,7 +24,7 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.LongLocks
 
             using var sharedLockCancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(options.WaitSeconds));
 
-            await using (var sharedLock = await _lockManager.SharedLockAsync(resourceId, sharedLockId, sharedLockCancellationTokenSource.Token))
+            await using (var sharedLock = await _lockService.SharedLockAsync(resourceId, sharedLockId, sharedLockCancellationTokenSource.Token))
             {
                 _logger.LogInformation("{lock} locked", sharedLockId);
                 try
@@ -45,7 +45,7 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.LongLocks
 
             using var exclusiveLockCancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(options.WaitSeconds));
 
-            await using (var exclusiveLock = await _lockManager.ExclusiveLockAsync(resourceId, exclusiveLockId, exclusiveLockCancellationTokenSource.Token))
+            await using (var exclusiveLock = await _lockService.ExclusiveLockAsync(resourceId, exclusiveLockId, exclusiveLockCancellationTokenSource.Token))
             {
                 _logger.LogInformation("{lock} locked", exclusiveLockId);
                 try

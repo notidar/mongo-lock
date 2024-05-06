@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Notidar.MongoDB.Lock.Managers
+namespace Notidar.MongoDB.Lock.Services
 {
-    public sealed class LockManager : ILockManager
+    public sealed class LockService : ILockService
     {
         private ILockStore _lockStore;
         private LockSettings _settings;
-        public LockManager(ILockStore lockStore, LockSettings settings)
+        public LockService(ILockStore lockStore, LockSettings settings)
         {
             _lockStore = lockStore ?? throw new ArgumentNullException(nameof(lockStore));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));

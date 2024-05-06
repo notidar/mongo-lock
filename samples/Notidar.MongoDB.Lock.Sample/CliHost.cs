@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Notidar.MongoDB.Lock.Extensions;
-using Notidar.MongoDB.Lock.Managers;
+using Notidar.MongoDB.Lock.Services;
 using Notidar.MongoDB.Lock.Sample.Commands;
 using Notidar.MongoDB.Lock.Sample.Commands.CombinedLocks;
 using Notidar.MongoDB.Lock.Sample.Commands.ExclusiveLocks;
@@ -40,10 +40,13 @@ namespace Notidar.MongoDB.Lock.Sample
 
         public async Task<int> RunCommandAsync<TCommandOptions>(TCommandOptions options, CancellationToken cancellationToken = default)
         {
+            await _host.StartAsync(cancellationToken);
             using var scope = _host.Services.CreateScope();
             var command = scope.ServiceProvider.GetRequiredService<ICommand<TCommandOptions>>();
             await command.ExecuteAsync(options, cancellationToken);
+            await _host.StopAsync(cancellationToken);
             return 0;
+            
         }
 
         public int RunCommand<TCommandOptions>(TCommandOptions options)
