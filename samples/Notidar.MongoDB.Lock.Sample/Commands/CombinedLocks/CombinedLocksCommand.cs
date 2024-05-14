@@ -100,7 +100,7 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.CombinedLocks
                     }
                 });
 
-            await Task.Delay(TimeSpan.FromSeconds(20));
+            await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
 
             GC.Collect();
             GC.Collect();

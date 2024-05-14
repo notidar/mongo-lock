@@ -9,8 +9,8 @@ namespace Notidar.MongoDB.Lock.Stores
 {
     public sealed class LockStore : ILockStore
     {
-        private IMongoCollection<Resource> _lockCollection;
-        private TimeProvider _timeProvider;
+        private readonly IMongoCollection<Resource> _lockCollection;
+        private readonly TimeProvider _timeProvider;
         public LockStore(IMongoCollection<Resource> lockCollection, TimeProvider timeProvider)
         {
             _lockCollection = lockCollection ?? throw new ArgumentNullException(nameof(lockCollection));
@@ -38,7 +38,7 @@ namespace Notidar.MongoDB.Lock.Stores
             return result;
         }
 
-        public async Task<Resource?> SharedLockAsync(string resourceId, string lockId, TimeSpan expiration, int maxSharedLock, CancellationToken cancellationToken = default)
+        public async Task<Resource?> SharedLockAsync(string resourceId, string lockId, TimeSpan expiration, int? sharedLockLimit, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -48,11 +48,14 @@ namespace Notidar.MongoDB.Lock.Stores
                     LockId = lockId,
                     Expiration = utcNow.Add(expiration),
                 };
+                var lockLimitFilter = sharedLockLimit.HasValue
+                    ? Builders<Resource>.Filter.Exists(r => r.SharedLocks![sharedLockLimit.Value - 1], false)
+                    : Builders<Resource>.Filter.Empty;
                 var result = await _lockCollection.FindOneAndUpdateAsync(
                     filter: Builders<Resource>.Filter.And(
                         Builders<Resource>.Filter.Eq(r => r.ResourceId, resourceId),
                         Builders<Resource>.Filter.Where(r => r.SharedLocks!.Any(r => r.LockId == lockId) == false),
-                        Builders<Resource>.Filter.Exists(r => r.SharedLocks![maxSharedLock - 1], false),
+                        lockLimitFilter,
                         Builders<Resource>.Filter.Or(
                             Builders<Resource>.Filter.Exists(r => r.ExclusiveLock, false),
                             Builders<Resource>.Filter.Lt(r => r.ExclusiveLock!.Expiration, utcNow))),
@@ -74,7 +77,7 @@ namespace Notidar.MongoDB.Lock.Stores
             }
         }
 
-        public async Task<Resource?> ExclusiveLockAsync(string resourceId, string lockId, TimeSpan expiration, bool ignoreSharedLocks, CancellationToken cancellationToken = default)
+        public async Task<Resource?> ExclusiveLockAsync(string resourceId, string lockId, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
             try
             {

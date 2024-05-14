@@ -8,9 +8,9 @@ namespace Notidar.MongoDB.Lock.Services
     public sealed class ExclusiveLockHandler : ILock
     {
         private ILockStore? _lockStore;
-        private LockSettings _lockServiceOptions;
-        private string _resourceId;
-        private string _lockId;
+        private readonly LockSettings _lockServiceOptions;
+        private readonly string _resourceId;
+        private readonly string _lockId;
         private DateTimeOffset _lockExpiration;
         private CancellationTokenSource? _cancellationTokenSource;
         private CancellationTokenSource? _combinedCancellationTokenSource;

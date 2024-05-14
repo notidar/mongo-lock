@@ -8,12 +8,17 @@ namespace Notidar.MongoDB.Lock.Services
 {
     public sealed class LockService : ILockService
     {
-        private ILockStore _lockStore;
-        private LockSettings _settings;
+        private readonly ILockStore _lockStore;
+        private readonly LockSettings _settings;
+
         public LockService(ILockStore lockStore, LockSettings settings)
         {
             _lockStore = lockStore ?? throw new ArgumentNullException(nameof(lockStore));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        }
+
+        public LockService(ILockStore lockStore) : this(lockStore, new LockSettings())
+        {
         }
 
         public async Task<ILock> ExclusiveLockAsync(string resourceId, string lockId, CancellationToken cancellationToken = default)
@@ -21,7 +26,7 @@ namespace Notidar.MongoDB.Lock.Services
             while (true)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var resource = await _lockStore.ExclusiveLockAsync(resourceId, lockId, _settings.LockExpirationPeriod, true, cancellationToken);
+                var resource = await _lockStore.ExclusiveLockAsync(resourceId, lockId, _settings.LockExpirationPeriod, cancellationToken);
                 if (resource != null)
                 {
                     while (true)
@@ -44,15 +49,20 @@ namespace Notidar.MongoDB.Lock.Services
 
         public async Task<ILock> SharedLockAsync(string resourceId, string lockId, CancellationToken cancellationToken = default)
         {
-            return await SharedLockAsync(resourceId, lockId, _settings.MaxSharedLocksPerResource, cancellationToken);
+            return await SharedLockInternalAsync(resourceId, lockId, null, cancellationToken);
         }
 
-        public async Task<ILock> SharedLockAsync(string resourceId, string lockId, int maxLocks, CancellationToken cancellationToken = default)
+        public async Task<ILock> SharedLockAsync(string resourceId, string lockId, int sharedLockLimit, CancellationToken cancellationToken = default)
+        {
+            return await SharedLockInternalAsync(resourceId, lockId, sharedLockLimit, cancellationToken);
+        }
+
+        private async Task<ILock> SharedLockInternalAsync(string resourceId, string lockId, int? sharedLockLimit, CancellationToken cancellationToken = default)
         {
             while (true)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var resource = await _lockStore.SharedLockAsync(resourceId, lockId, _settings.LockExpirationPeriod, maxLocks, cancellationToken: cancellationToken);
+                var resource = await _lockStore.SharedLockAsync(resourceId, lockId, _settings.LockExpirationPeriod, sharedLockLimit, cancellationToken: cancellationToken);
                 var sharedLock = resource?.SharedLocks?.SingleOrDefault(x => x.LockId == lockId);
                 if (sharedLock?.Expiration != null)
                 {
@@ -63,7 +73,7 @@ namespace Notidar.MongoDB.Lock.Services
                 {
                     continue;
                 }
-                if (resource.SharedLocks.Length < maxLocks && !resource.SharedLocks.Any(l => l.LockId == lockId))
+                if ((sharedLockLimit == null || resource.SharedLocks.Length < sharedLockLimit) && !resource.SharedLocks.Any(l => l.LockId == lockId))
                 {
                     continue;
                 }

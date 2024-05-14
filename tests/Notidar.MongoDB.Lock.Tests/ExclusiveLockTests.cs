@@ -47,7 +47,7 @@ namespace Notidar.MongoDB.Lock.Tests
             var expirationDateTime = FakeTimeProvider.GetUtcNow().Add(expiration);
             var resourceId = "1";
             var lockId = "2";
-            var resource = await LockProvider.ExclusiveLockAsync(resourceId, lockId, expiration, true);
+            var resource = await LockProvider.ExclusiveLockAsync(resourceId, lockId, expiration);
             resource.Should().NotBeNull();
             resource!.ResourceId.Should().Be(resourceId);
             resource!.InfiniteLockCount.Should().Be(0);
