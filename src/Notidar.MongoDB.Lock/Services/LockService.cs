@@ -47,14 +47,29 @@ namespace Notidar.MongoDB.Lock.Services
             }
         }
 
+        public Task<ILock> ExclusiveLockAsync(string resourceId, CancellationToken cancellationToken = default)
+        {
+            return ExclusiveLockAsync(resourceId, Guid.NewGuid().ToString(), cancellationToken);
+        }
+
         public async Task<ILock> SharedLockAsync(string resourceId, string lockId, CancellationToken cancellationToken = default)
         {
             return await SharedLockInternalAsync(resourceId, lockId, null, cancellationToken);
         }
 
+        public Task<ILock> SharedLockAsync(string resourceId, CancellationToken cancellationToken = default)
+        {
+            return SharedLockInternalAsync(resourceId, Guid.NewGuid().ToString(), null, cancellationToken);
+        }
+
         public async Task<ILock> SharedLockAsync(string resourceId, string lockId, int sharedLockLimit, CancellationToken cancellationToken = default)
         {
             return await SharedLockInternalAsync(resourceId, lockId, sharedLockLimit, cancellationToken);
+        }
+
+        public Task<ILock> SharedLockAsync(string resourceId, int sharedLockLimit, CancellationToken cancellationToken = default)
+        {
+            return SharedLockInternalAsync(resourceId, Guid.NewGuid().ToString(), sharedLockLimit, cancellationToken);
         }
 
         private async Task<ILock> SharedLockInternalAsync(string resourceId, string lockId, int? sharedLockLimit, CancellationToken cancellationToken = default)

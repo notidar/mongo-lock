@@ -23,8 +23,9 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.LongLocks
             const string exclusiveLockId = "exclusive-lock-id";
 
             using var sharedLockCancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(options.WaitSeconds));
+            using var sharedCombinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, sharedLockCancellationTokenSource.Token);
 
-            await using (var sharedLock = await _lockService.SharedLockAsync(resourceId, sharedLockId, sharedLockCancellationTokenSource.Token))
+            await using (var sharedLock = await _lockService.SharedLockAsync(resourceId, sharedLockId, sharedCombinedCancellationTokenSource.Token))
             {
                 _logger.LogInformation("{lock} locked", sharedLockId);
                 try
@@ -35,7 +36,7 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.LongLocks
                 {
                     _logger.LogInformation("{lock} lock expired", sharedLockId);
                 }
-                var resource = await _lockStore.GetResourceAsync(resourceId);
+                var resource = await _lockStore.GetResourceAsync(resourceId, cancellationToken);
                 if (resource!.SharedLocks!.Single(x => x.LockId == sharedLockId).Expiration < DateTimeOffset.UtcNow)
                 {
                     _logger.LogError("Lock was not prolonged");
@@ -44,8 +45,9 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.LongLocks
             }
 
             using var exclusiveLockCancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(options.WaitSeconds));
+            using var exclusiveCombinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, exclusiveLockCancellationTokenSource.Token);
 
-            await using (var exclusiveLock = await _lockService.ExclusiveLockAsync(resourceId, exclusiveLockId, exclusiveLockCancellationTokenSource.Token))
+            await using (var exclusiveLock = await _lockService.ExclusiveLockAsync(resourceId, exclusiveLockId, exclusiveCombinedCancellationTokenSource.Token))
             {
                 _logger.LogInformation("{lock} locked", exclusiveLockId);
                 try
@@ -56,7 +58,7 @@ namespace Notidar.MongoDB.Lock.Sample.Commands.LongLocks
                 {
                     _logger.LogInformation("{lock} lock expired", exclusiveLockId);
                 }
-                var resource = await _lockStore.GetResourceAsync(resourceId);
+                var resource = await _lockStore.GetResourceAsync(resourceId, cancellationToken);
                 if (resource!.ExclusiveLock!.LockId != exclusiveLockId || resource!.ExclusiveLock!.Expiration < DateTimeOffset.UtcNow)
                 {
                     _logger.LogError("Lock was not prolonged");

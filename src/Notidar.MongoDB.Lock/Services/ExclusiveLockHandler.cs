@@ -35,6 +35,8 @@ namespace Notidar.MongoDB.Lock.Services
                 _combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, cancellationToken);
             }
 
+            var internalCancellationToken = _combinedCancellationTokenSource?.Token ?? _cancellationTokenSource.Token;
+
             _task = Task.Run(async () =>
             {
                 var delay = lockServiceOptions.LockRenewalPeriod;
@@ -70,7 +72,7 @@ namespace Notidar.MongoDB.Lock.Services
                         }
                     }
                 }
-            });
+            }, internalCancellationToken);
         }
 
         public CancellationToken HealthToken => _combinedCancellationTokenSource?.Token ?? _cancellationTokenSource?.Token ?? throw new ObjectDisposedException(null);

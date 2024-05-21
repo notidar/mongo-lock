@@ -1,17 +1,20 @@
 # mongo-lock
 Distributed lock library for C#/.NET using MongoDB.
 
-`Notidar.MongoDB.Lock` is a core library that provides a simple way to create distributed locks for simple apps. `LockStore` can be used for direct lock management, while `LockService` provides a high level abstraction.
+[Notidar.MongoDB.Lock](https://www.nuget.org/packages/Notidar.MongoDB.Lock) ![NuGet Version](https://img.shields.io/nuget/v/Notidar.MongoDB.Lock) is a core library that provides a simple way to create distributed locks for simple apps. `LockStore` can be used for direct lock manipulation, while `LockService` provides a high level abstraction. Include extensions for creating collection and indexes.
 
-`Notidar.MongoDB.Lock.Extensions` is a library that provides all required extensions to use the library with `Microsoft.Extensions.DependencyInjection` including creating collection and indexes.
+[Notidar.MongoDB.Lock.Extensions](https://www.nuget.org/packages/Notidar.MongoDB.Lock.Extensions) ![NuGet Version](https://img.shields.io/nuget/v/Notidar.MongoDB.Lock.Extensions) is a library that provides all required extensions to use the library with `Microsoft.Extensions.DependencyInjection`.
 
 ## Features
 
 - Distributed locks using MongoDB
   - Exclusive locks
   - Shared locks
-  - Semaphore usage flow
-- MongoDB collection cleanup
+  - Semaphore like usage with shared locks
+- High level abstraction with `LockService`
+- Low level manipulation with `LockStore`
+- Optional MongoDB collection auto cleanup for expired locks based on TTL index
+- Flexible lock configuration with `LockOptions`
 
 ## Usage
 
@@ -26,20 +29,23 @@ services
 // resolve lock service
 var lockService = sp.GetRequiredService<ILockService>();
 
-await using (var sharedLock1 = await _lockService.SharedLockAsync(resourceId, lockId1, operationCancellationToken))
+await using (var sharedLock1 = await lockService.SharedLockAsync(resourceId, operationCancellationToken))
 {
     // shared lock1 acquired
-    await using (var sharedLock2 = await _lockService.SharedLockAsync(resourceId, lockId2, operationCancellationToken))
+    await DoSomethingAsync(sharedLock1.HealthToken); // use `sharedLock1.HealthToken` to check if lock is still valid
+    await using (var sharedLock2 = await lockService.SharedLockAsync(resourceId, operationCancellationToken))
     {
         // shared lock2 acquired
+        await DoSomethingAsync2(sharedLock2.HealthToken); // use `sharedLock2.HealthToken` to check if lock is still valid
     }
     // shared lock2 released
 }
 // shared lock1 released
 
-await using (var exclusiveLock = await _lockService.ExclusiveLockAsync(resourceId, exclusiveLockId, operationCancellationToken))
+await using (var exclusiveLock = await lockService.ExclusiveLockAsync(resourceId, operationCancellationToken))
 {
     // exclusive lock acquired
+    await DoSomethingExclusivelyAsync(exclusiveLock.HealthToken); // use `exclusiveLock.HealthToken` to check if lock is still valid
 }
 // exclusive lock released
 
@@ -79,6 +85,7 @@ See samples folder for more examples.
 
 Contributions are welcome! If you are interested in contributing towards a new or existing issue, please let me know via comments on the issue so that I can help you get started and avoid wasted effort on your part.
 
+- [x] Add support auto cleanup for expired locks
 - [ ] Add support for infinite locks (locks that never expire)
 - [ ] Add support for optional lock re-entry
 - [ ] Add logging support

@@ -33,7 +33,7 @@
     },
     "long-locks": {
       "commandName": "Project",
-      "commandLineArgs": "long-locks -w 30",
+      "commandLineArgs": "long-locks -w 300",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }
